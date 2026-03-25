@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zeerak AI — App Showcase</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a27;
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e8f0;
+      --muted: #8888aa;
+      --accent: #6c63ff;
+      --accent2: #ff6b9d;
+      --green: #22c55e;
+      --orange: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(108,99,255,0.15) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 40px rgba(108,99,255,0.4);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .badge.accent { border-color: rgba(108,99,255,0.4); color: #a78bfa; background: rgba(108,99,255,0.1); }
+    .badge.green { border-color: rgba(34,197,94,0.4); color: #4ade80; background: rgba(34,197,94,0.1); }
+    .badge.orange { border-color: rgba(245,158,11,0.4); color: #fbbf24; background: rgba(245,158,11,0.1); }
+
+    /* Nav */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+
+    .nav-item {
+      padding: 14px 20px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-item:hover { color: var(--text); border-bottom-color: rgba(108,99,255,0.5); }
+
+    /* Main content */
+    .container { max-width: 1200px; margin: 0 auto; padding: 60px 24px; }
+
+    /* Section */
+    .section { margin-bottom: 80px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .section-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Screenshot grid */
+    .grid { display: grid; gap: 24px; }
+    .grid-1 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-auto { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+    .grid-mobile { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-auto { grid-template-columns: 1fr; }
+      .grid-mobile { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Screenshot card */
+    .ss-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+
+    .ss-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(108,99,255,0.2);
+      border-color: rgba(108,99,255,0.3);
+    }
+
+    .ss-img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      cursor: zoom-in;
+    }
+
+    .ss-img-wrap::after {
+      content: '🔍 Click to zoom';
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.7);
+      color: rgba(255,255,255,0.8);
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .ss-card:hover .ss-img-wrap::after { opacity: 1; }
+
+    .ss-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.4s;
+    }
+    .ss-card:hover .ss-img-wrap img { transform: scale(1.02); }
+
+    .ss-info {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .ss-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .ss-desc {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    /* Mobile screenshot - thinner card */
+    .ss-mobile .ss-img-wrap img {
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* Hero screenshot */
+    .ss-hero { grid-column: 1 / -1; }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      cursor: zoom-out;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 0 80px rgba(108,99,255,0.3);
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    /* Stats row */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-logo">🧠</div>
+  <h1>Zeerak AI Platform</h1>
+  <p>
+    A comprehensive AI-powered platform designed for Afghanistan — intelligent solutions for education, health, agriculture, and coding in Pashto, Dari & English.
+  </p>
+  <div class="badges">
+    <span class="badge accent">🌐 Pashto · Dari · English</span>
+    <span class="badge green">✅ 9 AI Modules</span>
+    <span class="badge orange">📱 Responsive Design</span>
+    <span class="badge accent">🔒 Secure Auth</span>
+    <span class="badge green">⚡ React + TypeScript</span>
+  </div>
+</div>
+
+<!-- Sticky Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#auth" class="nav-item">🔐 Auth</a>
+    <a href="#dashboard" class="nav-item">🏠 Dashboard</a>
+    <a href="#chat" class="nav-item">💬 Chat</a>
+    <a href="#vision" class="nav-item">👁 Vision</a>
+    <a href="#code" class="nav-item">💻 CodeKhona</a>
+    <a href="#agriculture" class="nav-item">🌾 Agriculture</a>
+    <a href="#health" class="nav-item">❤️ Health</a>
+    <a href="#education" class="nav-item">🎓 Education</a>
+    <a href="#skills" class="nav-item">🛠 Skills</a>
+    <a href="#utilities" class="nav-item">⚙️ Utilities</a>
+    <a href="#mobile" class="nav-item">📱 Mobile</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">9</div>
+      <div class="stat-label">AI Modules</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Languages</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">App Screens</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Themes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Responsive</div>
+    </div>
+  </div>
+
+  <!-- Auth Section -->
+  <section class="section" id="auth">
+    <div class="section-header">
+      <div class="section-icon">🔐</div>
+      <div>
+        <div class="section-title">Authentication</div>
+        <div class="section-desc">Login, registration, and password recovery screens</div>
+      </div>
+    </div>
+    <div class="grid grid-auto">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="01-login-english.png" alt="Login Screen" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Login Screen</div>
+          <div class="ss-desc">English language — dark gradient background with card</div>
+        </div>
+      </div>
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="02-register.png" alt="Register Screen" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Register Screen</div>
+          <div class="ss-desc">New user account creation with validation</div>
+        </div>
+      </div>
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="03-forgot-password.png" alt="Forgot Password" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Forgot Password</div>
+          <div class="ss-desc">Password recovery via email</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Section -->
+  <section class="section" id="dashboard">
+    <div class="section-header">
+      <div class="section-icon">🏠</div>
+      <div>
+        <div class="section-title">Main Dashboard</div>
+        <div class="section-desc">Central hub with AI features, market prices, and stats</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="04-home-dashboard.png" alt="Home Dashboard" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Home Dashboard — Desktop (1440×900)</div>
+          <div class="ss-desc">Main dashboard featuring AI module cards, real-time market prices, upcoming appointments, and quick navigation. Demo user: Ahmad Karimi (Premium)</div>
+        </div>
+      </div>
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="04b-home-wide.png" alt="Home Dashboard Wide" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Home Dashboard — Full HD (1920×1080)</div>
+          <div class="ss-desc">Full HD widescreen view showing the complete dashboard layout</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chat Section -->
+  <section class="section" id="chat">
+    <div class="section-header">
+      <div class="section-icon">💬</div>
+      <div>
+        <div class="section-title">AI Chat — Zeerak Chat</div>
+        <div class="ss-desc">Multilingual AI conversation in Pashto, Dari & English</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="05-chat.png" alt="AI Chat" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">AI Chat Interface</div>
+          <div class="ss-desc">Clean conversation UI with message history, voice input support, and RAG document upload. Supports routing to Llama-3, Phi-3, mT5 & more.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision Section -->
+  <section class="section" id="vision">
+    <div class="section-header">
+      <div class="section-icon">👁</div>
+      <div>
+        <div class="section-title">Vision AI</div>
+        <div class="ss-desc">Camera-based OCR, translation, object recognition, and medicine identification</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="06-vision.png" alt="Vision AI" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Vision AI — Camera & OCR</div>
+          <div class="ss-desc">Advanced computer vision features: text extraction from images, Pashto/Dari/English translation, plant disease detection, and medicine label reading</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code Section -->
+  <section class="section" id="code">
+    <div class="section-header">
+      <div class="section-icon">💻</div>
+      <div>
+        <div class="section-title">CodeKhona — Code Playground</div>
+        <div class="ss-desc">Interactive coding environment with AI assistance</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="07-code-khona.png" alt="CodeKhona" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">CodeKhona — Interactive Code Playground</div>
+          <div class="ss-desc">Full-featured code editor supporting Python, JavaScript, HTML/CSS with real-time execution, AI code completion, and example templates</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agriculture Section -->
+  <section class="section" id="agriculture">
+    <div class="section-header">
+      <div class="section-icon">🌾</div>
+      <div>
+        <div class="section-title">Dehqan AI — Agriculture Assistant</div>
+        <div class="ss-desc">Crop disease diagnosis, market prices, weather alerts for Afghan farmers</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="08-agriculture.png" alt="Dehqan AI" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Dehqan AI (دهقان) — Agriculture Platform</div>
+          <div class="ss-desc">AI-powered agriculture assistant: crop disease identification via camera, real-time market prices (AFN), weather forecasts, and pest management advice</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Health Section -->
+  <section class="section" id="health">
+    <div class="section-header">
+      <div class="section-icon">❤️</div>
+      <div>
+        <div class="section-title">Tabib AI — Health Assistant</div>
+        <div class="ss-desc">AI-powered health advice, symptom checker, and telemedicine</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="09-health.png" alt="Tabib AI" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Tabib AI (طبیب) — Health Platform</div>
+          <div class="ss-desc">Intelligent health assistant: symptom analysis, appointment scheduling, specialist directory, and multilingual health information in Pashto & Dari</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Section -->
+  <section class="section" id="education">
+    <div class="section-header">
+      <div class="section-icon">🎓</div>
+      <div>
+        <div class="section-title">AI Tutor — Education Platform</div>
+        <div class="ss-desc">Afghan curriculum tutoring for Classes 6–12</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="10-education.png" alt="AI Tutor" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">AI Tutor — Afghan Education Platform</div>
+          <div class="ss-desc">Personalized tutoring aligned with Afghan national curriculum: Mathematics, Science, Literature, and more for grades 6–12 in Pashto, Dari & English</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="section" id="skills">
+    <div class="section-header">
+      <div class="section-icon">🛠</div>
+      <div>
+        <div class="section-title">Hunar Suite — Skills & Vocational Training</div>
+        <div class="ss-desc">Vocational training, AI resume builder, and micro-credentials</div>
+      </div>
+    </div>
+    <div class="grid grid-1">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="11-skills.png" alt="Hunar Suite" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Hunar Suite (هنر) — Vocational Skills</div>
+          <div class="ss-desc">Comprehensive skills development platform: vocational courses, AI-generated resume builder, micro-credential certificates, and job market insights</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Utilities Section -->
+  <section class="section" id="utilities">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div>
+        <div class="section-title">Utility Pages</div>
+        <div class="ss-desc">Profile, settings, and pricing</div>
+      </div>
+    </div>
+    <div class="grid grid-auto">
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="13-profile.png" alt="User Profile" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">User Profile</div>
+          <div class="ss-desc">Account management and personal info</div>
+        </div>
+      </div>
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="12-settings.png" alt="Settings" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Settings</div>
+          <div class="ss-desc">Language, theme, and app preferences</div>
+        </div>
+      </div>
+      <div class="ss-card">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="14-pricing.png" alt="Pricing" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Pricing Plans</div>
+          <div class="ss-desc">Free and premium subscription tiers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile Section -->
+  <section class="section" id="mobile">
+    <div class="section-header">
+      <div class="section-icon">📱</div>
+      <div>
+        <div class="section-title">Mobile Views (iPhone 14 Pro — 390×844)</div>
+        <div class="ss-desc">Fully responsive design optimized for mobile screens</div>
+      </div>
+    </div>
+    <div class="grid grid-mobile">
+      <div class="ss-card ss-mobile">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="15-login-mobile.png" alt="Login Mobile" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Login (Mobile)</div>
+          <div class="ss-desc">Authentication screen</div>
+        </div>
+      </div>
+      <div class="ss-card ss-mobile">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="16-home-mobile.png" alt="Home Mobile" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Dashboard (Mobile)</div>
+          <div class="ss-desc">Home with quick-access cards</div>
+        </div>
+      </div>
+      <div class="ss-card ss-mobile">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="17-chat-mobile.png" alt="Chat Mobile" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Chat (Mobile)</div>
+          <div class="ss-desc">AI chat interface</div>
+        </div>
+      </div>
+      <div class="ss-card ss-mobile">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="18-agriculture-mobile.png" alt="Agriculture Mobile" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Dehqan AI (Mobile)</div>
+          <div class="ss-desc">Agriculture assistant</div>
+        </div>
+      </div>
+      <div class="ss-card ss-mobile">
+        <div class="ss-img-wrap" onclick="openLightbox(this)">
+          <img src="19-health-mobile.png" alt="Health Mobile" loading="lazy" />
+        </div>
+        <div class="ss-info">
+          <div class="ss-title">Tabib AI (Mobile)</div>
+          <div class="ss-desc">Health assistant</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Zeerak AI Platform — Screenshots captured at production quality with Playwright headless Chromium.</p>
+  <p style="margin-top: 8px; opacity: 0.5;">Demo mode: Ahmad Karimi account · VITE_DEMO_MODE=true · All pages fully rendered</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  function openLightbox(wrap) {
+    const img = wrap.querySelector('img');
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+
+</body>
+</html>
